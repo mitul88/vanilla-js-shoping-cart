@@ -20,7 +20,7 @@ class UI {
                     </div>
                     <div>
                         <p class="blockquote mt-2 ms-3">${product.desc}</p>
-                        <button id="addToCart" class="btn btn-success text-light ms-3">Add To Cart</button>
+                        <a class="btn btn-success text-light ms-3 addToCart" product_id=${product.id}>Add To Cart</a>
                     </div>
                 </div>
             </div>
@@ -29,21 +29,68 @@ class UI {
         productContainer.innerHTML = products
     }
 
-    showCartItems(){
-
+    static showCartItems(){
+        let cartContainer = document.querySelector('#cart-container')
+        let cartItems = JSON.parse(localStorage.getItem('cartItems'))
+        if(cartItems == null) {
+            cartContainer.innerHTML = "<h4 class='text-center'>No cart items</h4>"
+        } else {
+            let items =''
+            cartItems.forEach((item,index)=>{
+                items += `
+                    <tr>
+                        <th scope="row">${index+1}</th>
+                        <td><img src=${item.img} alt="" class="border border-dark" style="width: 50px; height: 50px; border-radius: 50%;"></td>
+                        <td>${item.name}</td>
+                        <td>${item.qty}</td>
+                        <td>${item.price}</td>
+                        <td>${item.qty * item.price}</td>
+                        <td>X</td>
+                    </tr>
+                `
+            })
+            cartContainer.innerHTML = items
+        }
     }
 }
 
-class Cart{
+class CartLS{
     constructor(){
     
     }
+
+    static getCartItems(){
+        let cartItems
+        if(localStorage.getItem('cartItems') === null) {
+            cartItems = []
+        } else {
+            cartItems = JSON.parse(localStorage.getItem('cartItems'))
+        }
+
+        return cartItems
+    }
     
-    addCartItem(data){
-        
+    static addCartItem(item){
+
+        let items = CartLS.getCartItems()
+        let idMatch = false
+
+        items.forEach(itemLS => {
+            if(item.id == itemLS.id) {
+                itemLS.qty += 1
+                idMatch = true
+                return localStorage.setItem('cartItems', JSON.stringify(items))
+            }
+        })
+
+        if(!idMatch) {
+            items.push(item)
+            localStorage.setItem('cartItems', JSON.stringify(items))
+        }
+
     }
 
-    removeCartItem(){
+    removeCartItem(id){
 
     }
 }
