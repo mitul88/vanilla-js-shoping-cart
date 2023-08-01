@@ -6,17 +6,15 @@ ui.showProducts(mock)
 
 let cartAdd = document.querySelectorAll('.addToCart')
 
-// events
+
+// event
 document.addEventListener('DOMContentLoaded', UI.showCartItems())
+
 cartAdd.forEach(i=> {
     addEventListener('click', addToCart)
 })
 
-
-// functions
-
 function addToCart(e){
-    
     if(e.target.hasAttribute('product_id')) {
        let id = e.target.getAttribute('product_id')
        
@@ -34,6 +32,20 @@ function addToCart(e){
                 CartLS.addCartItem(cartData)
             }
         })
+        location.reload()
+    }
+}
+
+
+let cartRemove = document.querySelectorAll('.remove')
+cartRemove.forEach(i=>{
+    addEventListener('click', removeFromCart)
+})
+function removeFromCart(e){
+    console.log(e)
+    if(e.target.hasAttribute('delete_id')) {
+        let id = e.target.getAttribute('delete_id')
+        CartLS.removeCartItem(id)
         location.reload()
     }
 }

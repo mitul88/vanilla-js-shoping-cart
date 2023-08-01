@@ -35,15 +35,19 @@ class UI {
         let quantity = document.querySelector('#quantity')
         let noCart = document.querySelector('#no-cart')
         let totalAmount = document.querySelector('#total')
+
         let cart = JSON.parse(localStorage.getItem('cart'))
         let cartItems = cart != null ? cart.cartItems : null
+        
         if(cartItems == null ) {
             cartContainer.innerHTML = "<h4 class='text-center w-100 mt-5'>No cart items</h4>"
             noCart.classList.remove("d-none")
         } else {
             table.classList.remove("d-none")
-            totalAmount.classList.remove("d-none")
-            quantity.classList.remove("d-none")
+            if(cart.totalQTY != 0) {
+                totalAmount.classList.remove("d-none")
+                quantity.classList.remove("d-none")
+            }
             quantity.textContent = `${cart.totalQTY}`
             totalAmount.innerHTML = `Total: ${cart.total}`
             let items =''
@@ -56,7 +60,7 @@ class UI {
                         <td>${item.qty}</td>
                         <td>${item.price}</td>
                         <td>${item.qty * item.price}</td>
-                        <td>X</td>
+                        <td><a class="remove" style="text-decoration:none; cursor: pointer; color:red; font-weight:bolder" delete_id=${item.id}>X</a></td>
                     </tr>
                 `
             })
@@ -124,7 +128,26 @@ class CartLS{
 
     }
 
-    removeCartItem(id){
+    static removeCartItem(id){
+        let cart = CartLS.getCartItems()
+        let items = cart.cartItems
 
+        items.forEach((itemLS, index) => {
+            if(id == itemLS.id) {
+                itemLS.qty > 1 ? itemLS.qty -= 1 : items.splice(index, 1)
+                cart.cartItems = items
+                let total = 0
+                for (let item of items) {
+                    total+= item.price*item.qty
+                }
+                let totalQTY = 0
+                for(let item of items) {
+                    totalQTY += item.qty
+                }
+                cart.total = total
+                cart.totalQTY = totalQTY
+                localStorage.setItem('cart', JSON.stringify(cart))
+            }
+        })
     }
 }
