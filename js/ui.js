@@ -9,11 +9,11 @@ class UI {
         let products =''
         data.forEach(product => {
             products += `
-            <div class="card mb-3 d-flex flex-row">
-                <div class="w-25">
+            <div class="card mb-3 d-flex flex-md-column flex-lg-row">
+                <div class="col-md-12 col-lg-3">
                     <img src=${product.img} alt="" class="card-img-top image" />
                 </div>
-                <div class="w-75 h-100">
+                <div class="col-md-12 col-lg-9 h-100">
                     <div class="d-flex justify-content-between bg-secondary text-light px-3">
                         <h4>${product.name}</h4>
                         <h4>${product.price} BDT</h4>
