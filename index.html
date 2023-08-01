@@ -35,10 +35,16 @@
                 <div class="card p-3">
                     <div class="card-title text-center">
                         <h1>Cart</h1>
+                        <h5 id="no-cart" class="d-none">
+                            No Cart Items
+                        </h5>
+                        <span id="quantity" class="d-none p-3 position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">
+                            99+
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
                     </div>
                     <div class="card-body" >
-            
-                            <table class="table table-borderless">
+                            <table id="table" class="table table-borderless d-none">
                                 <thead>
                                   <tr>
                                     <th scope="col">Sl</th>
@@ -51,19 +57,11 @@
                                   </tr>
                                 </thead>
                                 <tbody id="cart-container">
-                                  <tr>
-                                    <th scope="row">1</th>
-                                    <td><img src="img/jeans.jpg" alt="" class="border border-dark" style="width: 50px; height: 50px; border-radius: 50%;"></td>
-                                    <td>Jeans</td>
-                                    <td>1</td>
-                                    <td>200</td>
-                                    <td>200</td>
-                                    <td>X</td>
-                                  </tr>
+                                  <!-- dynamic content will load here -->
                                 </tbody>
                               </table>
                               <div class="w-100 d-flex justify-content-center">
-                                <h5 class="fw-bold">Total: 400</h5>
+                                <h5 class="fw-bold d-none" id="total"></h5>
                               </div>
                     </div>
                 </div>

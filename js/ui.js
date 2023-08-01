@@ -31,10 +31,21 @@ class UI {
 
     static showCartItems(){
         let cartContainer = document.querySelector('#cart-container')
-        let cartItems = JSON.parse(localStorage.getItem('cartItems'))
-        if(cartItems == null) {
-            cartContainer.innerHTML = "<h4 class='text-center'>No cart items</h4>"
+        let table = document.querySelector('#table')
+        let quantity = document.querySelector('#quantity')
+        let noCart = document.querySelector('#no-cart')
+        let totalAmount = document.querySelector('#total')
+        let cart = JSON.parse(localStorage.getItem('cart'))
+        let cartItems = cart != null ? cart.cartItems : null
+        if(cartItems == null ) {
+            cartContainer.innerHTML = "<h4 class='text-center w-100 mt-5'>No cart items</h4>"
+            noCart.classList.remove("d-none")
         } else {
+            table.classList.remove("d-none")
+            totalAmount.classList.remove("d-none")
+            quantity.classList.remove("d-none")
+            quantity.textContent = `${cart.totalQTY}`
+            totalAmount.innerHTML = `Total: ${cart.total}`
             let items =''
             cartItems.forEach((item,index)=>{
                 items += `
@@ -55,37 +66,60 @@ class UI {
 }
 
 class CartLS{
-    constructor(){
-    
-    }
-
     static getCartItems(){
-        let cartItems
-        if(localStorage.getItem('cartItems') === null) {
-            cartItems = []
+        let cart
+        if(localStorage.getItem('cart') === null) {
+            cart = {
+                cartItems: [],
+                totalQTY: 0,
+                total: 0
+            }
         } else {
-            cartItems = JSON.parse(localStorage.getItem('cartItems'))
+            cart = JSON.parse(localStorage.getItem('cart'))
         }
 
-        return cartItems
+        return cart
     }
     
     static addCartItem(item){
 
-        let items = CartLS.getCartItems()
+        let cart = CartLS.getCartItems()
+        let items = cart.cartItems
         let idMatch = false
 
         items.forEach(itemLS => {
             if(item.id == itemLS.id) {
                 itemLS.qty += 1
                 idMatch = true
-                return localStorage.setItem('cartItems', JSON.stringify(items))
+                cart.cartItems = items
+                let total = 0
+                for (let item of items) {
+                    total+= item.price*item.qty
+                }
+                let totalQTY = 0
+                for(let item of items) {
+                    totalQTY += item.qty
+                }
+                cart.total = total
+                cart.totalQTY = totalQTY
+                localStorage.setItem('cart', JSON.stringify(cart))
             }
         })
 
         if(!idMatch) {
             items.push(item)
-            localStorage.setItem('cartItems', JSON.stringify(items))
+            let total = 0
+            for (let item of items) {
+                total+= item.price*item.qty
+            }
+            
+            let totalQTY = 0
+            for(let item of items) {
+                totalQTY += item.qty
+            }
+            cart.total = total
+            cart.totalQTY = totalQTY
+            localStorage.setItem('cart', JSON.stringify(cart))
         }
 
     }
